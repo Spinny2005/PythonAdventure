@@ -2,13 +2,15 @@ import pygame
 from settings import *
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups):
+    def __init__(self, pos, groups, obstacle_sprites):
         super().__init__(groups)
-        self.image = pygame.image.load('./graphics/test/player.png').convert_alpha()
+        self.image = pygame.image.load('/home/spencer/PythonAdventure/graphics/test/player.png').convert_alpha()
         self.rect = self.image.get_rect(topleft = pos)
 
         self.direction = pygame.math.Vector2()
         self.speed = 5
+
+        self.obstacle_sprites = obstacle_sprites
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -30,9 +32,25 @@ class Player(pygame.sprite.Sprite):
     def move(self, speed):
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
-        self.rect.center += self.direction * speed
+        #self.rect.center += self.direction * speed
+        self.rect.x += self.direction.x * speed
+        self.rect.y += self.direction.y * speed
 
-    
+    def collision(self, direction):
+        if direction == 'horizontal':
+            for sprite in self.obstacle_sprites:
+                if sprite.rect.colliderect(self.rect):
+                    if self.direciton > 0:
+                        self.rect.right = sprite.rect.left
+                    if self.direction < 0:
+                        self.rect.left = sprite.rect.right
+        if direction == 'vertical':
+            for sprite in self.obstacle_sprites:
+                if sprite.rect.colliderect(self.rect):
+                    if self.direciton > 0:
+                        self.rect.bottom = sprite.rect.top
+                    if self.direction < 0:
+                        self.rect.top = sprite.rect.bottom
 
     def update(self):
         self.input()
