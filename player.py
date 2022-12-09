@@ -12,7 +12,7 @@ class Player(pygame.sprite.Sprite):
 
     def input(self):
         keys = pygame.key.get_pressed()
-        
+
         if keys[pygame.K_UP]:
             self.direction.y = -1
         elif keys[pygame.K_DOWN]:
@@ -31,5 +31,5 @@ class Player(pygame.sprite.Sprite):
         self.rect.center += self.direction * speed
 
     def update(self):
-        self.input
+        self.input()
         self.move(self.speed)
