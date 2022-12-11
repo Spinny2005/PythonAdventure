@@ -35,11 +35,23 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.half_height = self.display_surface.get_size()[1] // 2
         self.offset = pygame.math.Vector2()
 
+        
+        try:
+            self.floor_surface = pygame.image.load('./graphics/map/groud.png').convert()
+        except FileNotFoundError:
+            try:
+                self.floor_surface = pygame.image.load('/home/spencer/PythonAdventure/graphics/map/groud.png').convert()
+            except FileNotFoundError:
+                self.floor_surface = pygame.image.load('$HOME/PythonAdventure/graphics/map/groud.png').convert()
+        self.floor_rect = self.floor_surface.get_rect(topleft = (0,0))
+
     def custom_draw(self, player):
         self.offset.x = player.rect.centerx - self.half_width
         self.offset.y = player.rect.centery - self.half_height
 
-        #for sprite in self.sprites():
+        floor_offset_pos = self.floor_rect.topleft - self.offset
+        self.display_surface.blit(self.floor_surface, floor_offset_pos)
+
         for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
             offset_rect = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image,offset_rect)
